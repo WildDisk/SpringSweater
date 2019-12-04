@@ -6,6 +6,12 @@
 </head>
 <body>
 <div>
+    <form action="/logout" method="post">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <input type="submit" value="Sign Out">
+    </form>
+</div>
+<div>
     <form method="post">
         <label>
             <input type="text" name="text" placeholder="Введи сообщение"/>
@@ -13,6 +19,7 @@
         <label>
             <input type="text" name="tag" placeholder="Тэг"/>
         </label>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
         <button type="submit">Добавить</button>
     </form>
 </div>
@@ -21,6 +28,7 @@
     <label>
         <input type="text" name="filter">
     </label>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
     <button type="submit">Найти</button>
 </form>
 {{#messages}}

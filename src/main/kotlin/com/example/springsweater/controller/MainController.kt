@@ -1,4 +1,4 @@
-package com.example.springsweater
+package com.example.springsweater.controller
 
 import com.example.springsweater.domain.Message
 import com.example.springsweater.repository.MessageRepository
@@ -8,12 +8,12 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 
 @Controller
-class GreetingController {
+class MainController {
     @Autowired
     private lateinit var messageRepository: MessageRepository
 
     @GetMapping("/")
-    fun greeting(name: String, model: Model): String = "greeting"
+    fun greeting(): String = "greeting"
 
     @GetMapping("/main")
     fun main(model: Model): String {
@@ -57,4 +57,7 @@ class GreetingController {
         model.addAttribute("messages", messages)
         return "main"
     }
+
+    @GetMapping("/login")
+    fun login(): String = "login"
 }
