@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import java.lang.IndexOutOfBoundsException
 
 @RestController
 class ApiController {
@@ -26,7 +25,7 @@ class ApiController {
     @ResponseBody
     fun apiMessage(@RequestParam id: Long): Message {
         val messages = messageRepository.findMessageById(id)
-        return Message(messages[0].id, messages[0].text, messages[0].tag)
+        return Message(messages[0].id, messages[0].text, messages[0].tag, messages[0].author)
     }
 
     @RequestMapping("/api/users")
