@@ -2,6 +2,10 @@ package com.example.springsweater.domain
 
 import javax.persistence.*
 
+/**
+ * @project SpringSweater
+ * @author WildDisk
+ */
 @Entity
 class Message(
       @Id

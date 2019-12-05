@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ * Rest API выводит информацию о сообщениях и пользователях в JSON
+ *
+ * @project SpringSweater
+ * @author WildDisk
+ */
 @RestController
 class ApiController {
     @Autowired
@@ -22,10 +28,18 @@ class ApiController {
     @Autowired
     private lateinit var messageDetailRepository: MessageApiRepository
 
+    /**
+     * Вывод всех имющихся сообщений из базы
+     * и информации об их авторах
+     */
     @RequestMapping("/api/messages")
     @ResponseBody
     fun apiMessageAll(): Iterable<Message> = messageRepository.findAll()
 
+    /**
+     * Поиск сообщения по id
+     * @param id
+     */
     @RequestMapping("/api/message")
     @ResponseBody
     fun apiMessage(@RequestParam id: Long): Message {
@@ -33,10 +47,17 @@ class ApiController {
         return Message(messages[0].id, messages[0].text, messages[0].tag, messages[0].author)
     }
 
+    /**
+     * Вывод всех пользователей
+     */
     @RequestMapping("/api/users")
     @ResponseBody
     fun apiUserAll(): Iterable<User> = userApiRepository.findAll()
 
+    /**
+     * Поис пользователя по id
+     * @param id
+     */
     @RequestMapping("/api/user")
     @ResponseBody
     fun apiUserById(@RequestParam id: Long): User = try {
@@ -46,6 +67,10 @@ class ApiController {
         User(0, "Пользователь не найден", "null", false, mutableSetOf())
     }
 
+    /**
+     * Поиск пользователя по имени
+     * @param name
+     */
     @RequestMapping("/api/username")
     @ResponseBody
     fun apiUserByName(@RequestParam name: String): User = try {
@@ -55,6 +80,10 @@ class ApiController {
         User(0, "Пользователь не найден", "null", false, mutableSetOf())
     }
 
+    /**
+     * Выборка всех сообщений аутентифицированного пользователя
+     * @param user
+     */
     @RequestMapping("/api/detail-message")
     fun apiDetailMessage(@AuthenticationPrincipal user: User?): Iterable<QMessage> {
         return when (user) {
@@ -75,7 +104,4 @@ class ApiController {
             }
         }
     }
-
-    @RequestMapping("/api/messages-detail")
-    fun apiMessagesDetail(): MutableList<Message> = messageDetailRepository.findAll()
 }

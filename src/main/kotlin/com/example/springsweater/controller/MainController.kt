@@ -11,11 +11,22 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
+/**
+ * Контроллер отвечающий за посты и страницу приветствия
+ *
+ * @project SpringSweater
+ * @author WildDisk
+ */
 @Controller
 class MainController {
     @Autowired
     private lateinit var messageRepository: MessageRepository
 
+    /**
+     * Приветствие
+     * @param user смотрим авторизован пользователь или нет
+     * @param model если пользователь авторизован возвращается имя или "guest"
+     */
     @GetMapping("/")
     fun greeting(
             @AuthenticationPrincipal user: User?,
@@ -28,6 +39,10 @@ class MainController {
         return "greeting"
     }
 
+    /**
+     * Вывод постов на экран
+     * @param filter отвечает за фильтрацию постов по тэгу
+     */
     @GetMapping("/main")
     fun main(
             @RequestParam(required = false, defaultValue = "") filter: String,
@@ -42,6 +57,12 @@ class MainController {
         return "main"
     }
 
+    /**
+     * Создание сообщения
+     * @param text текст поста
+     * @param tag тэг поста
+     * @param user автор поста
+     */
     @PostMapping("/main")
     fun add(
             @AuthenticationPrincipal user: User,

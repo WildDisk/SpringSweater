@@ -4,7 +4,18 @@ import com.example.springsweater.domain.Message
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
+/**
+ * Интерфейс реализующий работу с API по сообщениям в NativeQuery
+ *
+ * @project SpringSweater
+ * @author WildDisk
+ */
 interface MessageApiRepository : JpaRepository<Message, Long> {
+    /**
+     * Выборка всех сообщений пользователя.
+     * Выводит id сообщения, текст, тэг и имя автора сообщения
+     * @param username имя автора сообщений
+     */
     @Query(value = """
         select 
         m.id as messageId,
