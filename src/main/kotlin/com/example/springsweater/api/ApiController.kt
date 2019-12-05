@@ -1,10 +1,13 @@
 package com.example.springsweater.api
 
 import com.example.springsweater.domain.Message
+import com.example.springsweater.domain.QMessage
 import com.example.springsweater.domain.User
+import com.example.springsweater.repository.MessageApiRepository
 import com.example.springsweater.repository.MessageRepository
 import com.example.springsweater.repository.UserApiRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
@@ -16,6 +19,8 @@ class ApiController {
     private lateinit var messageRepository: MessageRepository
     @Autowired
     private lateinit var userApiRepository: UserApiRepository
+    @Autowired
+    private lateinit var messageDetailRepository: MessageApiRepository
 
     @RequestMapping("/api/messages")
     @ResponseBody
@@ -49,4 +54,28 @@ class ApiController {
     } catch (e: IndexOutOfBoundsException) {
         User(0, "Пользователь не найден", "null", false, mutableSetOf())
     }
+
+    @RequestMapping("/api/detail-message")
+    fun apiDetailMessage(@AuthenticationPrincipal user: User?): Iterable<QMessage> {
+        return when (user) {
+            null -> listOf(QMessage("null", "null", "null", "Неавторизованный пользователь"))
+            else -> {
+                val messages = messageDetailRepository.findUserMessages(user.username)
+                when {
+                    messages.isEmpty() -> listOf(QMessage("Сообщений не найдено", "null", "null", "null"))
+                    else -> messages.indices.mapTo(arrayListOf()) {
+                        QMessage(
+                                messages[it].getMessageId(),
+                                messages[it].getMessage(),
+                                messages[it].getTag(),
+                                messages[it].getUsername().toString()
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @RequestMapping("/api/messages-detail")
+    fun apiMessagesDetail(): MutableList<Message> = messageDetailRepository.findAll()
 }
