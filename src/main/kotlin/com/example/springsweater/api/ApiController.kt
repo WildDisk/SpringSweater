@@ -62,7 +62,7 @@ class ApiController {
             else -> {
                 val messages = messageDetailRepository.findUserMessages(user.username)
                 when {
-                    messages.isEmpty() -> listOf(QMessage("Сообщений не найдено", "null", "null", "null"))
+                    messages.isEmpty() -> listOf(QMessage("null", "Сообщений не найдено", "null", "null"))
                     else -> messages.indices.mapTo(arrayListOf()) {
                         QMessage(
                                 messages[it].getMessageId(),

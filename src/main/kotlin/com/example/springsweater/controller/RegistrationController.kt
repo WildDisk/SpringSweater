@@ -24,7 +24,7 @@ class RegistrationController {
         val userCheck = userRepository.findByUsername(user.username)
         return when {
             userCheck != null -> {
-                model["message"] = "User exists!"
+                model.addAttribute("message", "User exists!")
                 "registration"
             }
             else -> {
