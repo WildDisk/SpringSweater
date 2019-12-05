@@ -1,0 +1,6 @@
+[#ftl]
+[#-- @implicitly included --]
+[#-- @ftlvariable name="user" type="String" --]
+[#-- @ftlvariable name="message" type="String" --]
+[#-- @ftlvariable name="filter" type="String" --]
+[#-- @ftlvariable name="_csrf.token" type="java.lang.String" --]

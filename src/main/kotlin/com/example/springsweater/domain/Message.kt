@@ -14,5 +14,6 @@ class Message(
       val author: User? = null
 ) {
       constructor(text: String, tag: String): this(id = 0, text = text, tag = tag)
+      constructor(text: String, tag: String, user: User): this(id = 0, text = text, tag = tag, author = user)
       fun getAuthorName(): String = author?.username ?: "{none}"
 }

@@ -29,9 +29,16 @@ class MainController {
     }
 
     @GetMapping("/main")
-    fun main(model: Model): String {
-        val messages: Iterable<Message> = messageRepository.findAll()
+    fun main(
+            @RequestParam(required = false, defaultValue = "") filter: String,
+            model: Model
+    ): String {
+        val messages: Iterable<Message> = when {
+            filter.isEmpty() -> messageRepository.findAll()
+            else -> messageRepository.findByTag(filter)
+        }
         model.addAttribute("messages", messages)
+        model.addAttribute("filter", filter)
         return "main"
     }
 
@@ -42,22 +49,9 @@ class MainController {
             @RequestParam tag: String,
             model: Model
     ): String {
-        val message = Message(text, tag)
+        val message = Message(text, tag, user)
         messageRepository.save(message)
         val messages: Iterable<Message> = messageRepository.findAll()
-        model.addAttribute("messages", messages)
-        return "main"
-    }
-
-    @PostMapping("/filter")
-    fun filter(
-            @RequestParam filter: String,
-            model: Model
-    ): String {
-        val messages: Iterable<Message> = when {
-            filter.isEmpty() -> messageRepository.findAll()
-            else -> messageRepository.findByTag(filter)
-        }
         model.addAttribute("messages", messages)
         return "main"
     }
