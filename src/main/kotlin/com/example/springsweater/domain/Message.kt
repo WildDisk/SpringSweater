@@ -3,6 +3,15 @@ package com.example.springsweater.domain
 import javax.persistence.*
 
 /**
+ * Message класс отвечает за хранение данных
+ * в таблице message
+ *
+ * @param id поста
+ * @param text текст поста
+ * @param tag поста
+ * @param author имя автора поста
+ * @param filename имя файла поста, изображение
+ *
  * @project SpringSweater
  * @author WildDisk
  */
@@ -20,5 +29,9 @@ class Message(
 ) {
       constructor(text: String, tag: String): this(id = 0, text = text, tag = tag)
       constructor(text: String, tag: String, user: User): this(id = 0, text = text, tag = tag, author = user)
+
+      /**
+       * Получает имя автора поста, если null то возвращает {none}
+       */
       fun getAuthorName(): String = author?.username ?: "{none}"
 }

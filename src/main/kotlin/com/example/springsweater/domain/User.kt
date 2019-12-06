@@ -5,6 +5,17 @@ import org.springframework.security.core.userdetails.UserDetails
 import javax.persistence.*
 
 /**
+ * User класс отвечает за хранение данных
+ * в таблице usr
+ *
+ * @param id id пользователя
+ * @param username имя пользователя
+ * @param password хэш пароля
+ * @param isActive статус активации пользователя
+ * @param email пользователя
+ * @param activationCode код активации для регистрации по email
+ * @param roles роли для пользователей
+ *
  * @project SpringSweater
  * @author WildDisk
  */
@@ -17,6 +28,8 @@ class User(
         private var username: String = "",
         private var password: String = "",
         var isActive: Boolean = false,
+        var email: String = "",
+        var activationCode: String? = "",
         @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
         @CollectionTable(name = "user_role", joinColumns = [JoinColumn(name = "user_id")])
         @Enumerated(EnumType.STRING)

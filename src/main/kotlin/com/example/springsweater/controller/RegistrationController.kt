@@ -1,15 +1,13 @@
 package com.example.springsweater.controller
 
-import com.example.springsweater.domain.Role
 import com.example.springsweater.domain.User
-import com.example.springsweater.repository.UserRepository
+import com.example.springsweater.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import java.util.*
 
 /**
  * Класс конфугурации {@link WebSecurity}. Отвечает за ограничение доступа к страницам
@@ -21,7 +19,7 @@ import java.util.*
 @Controller
 class RegistrationController {
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var userService: UserService
 
     @GetMapping("/registration")
     fun registration(): String = "registration"
@@ -36,19 +34,26 @@ class RegistrationController {
      * @return redirect:/login пользователь зарегистрирован
      */
     @PostMapping("/registration")
-    fun addUser(user: User, model: Model): String {
-        val userCheck = userRepository.findByUsername(user.username)
-        return when {
-            userCheck != null -> {
-                model.addAttribute("message", "User exists!")
-                "registration"
-            }
-            else -> {
-                user.isActive = true
-                user.roles = Collections.singleton(Role.USER)
-                userRepository.save(user)
-                "redirect:/login"
-            }
+    fun addUser(user: User, model: Model): String = when {
+        !userService.addUser(user) -> {
+            model.addAttribute("message", "User exists!")
+            "registration"
         }
+        else -> "redirect:/login"
+    }
+
+    /**
+     * Активация пользователя
+     *
+     * @param model сообщение о результате активации
+     * @param code код активации из письма
+     */
+    fun activate(model: Model, @PathVariable code: String): String {
+        val isActivated: Boolean = userService.activateUser(code)
+        when {
+            isActivated -> model.addAttribute("message", "User successfully activated")
+            else -> model.addAttribute("message", "Activation code is not found")
+        }
+        return "login"
     }
 }

@@ -16,4 +16,11 @@ interface UserRepository : JpaRepository<User, Long> {
      * @return User? Если без ? падает при передачи параметров из шаблона
      */
     fun findByUsername(username: String): User?
+
+    /**
+     * Активация пользователя по коду
+     *
+     * @param code активации
+     */
+    fun findByActivationCode(code: String): User
 }
