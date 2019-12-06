@@ -15,7 +15,8 @@ class Message(
       var tag: String? = null,
       @ManyToOne(fetch = FetchType.EAGER)
       @JoinColumn(name = "usr_id")
-      val author: User? = null
+      var author: User? = null,
+      var filename: String? = null
 ) {
       constructor(text: String, tag: String): this(id = 0, text = text, tag = tag)
       constructor(text: String, tag: String, user: User): this(id = 0, text = text, tag = tag, author = user)

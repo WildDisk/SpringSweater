@@ -3,6 +3,6 @@
 
 <@common.page>
     Add new user
-    <P>${message!}</P>
+    <P><B><U>${message!}</U></B></P>
     <@login.login "/registration" />
 </@common.page>
