@@ -2,14 +2,13 @@ package com.example.springsweater.controller
 
 import com.example.springsweater.domain.Role
 import com.example.springsweater.domain.User
-import com.example.springsweater.repository.UserRepository
+import com.example.springsweater.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import java.util.*
-import java.util.stream.Collectors
 
 /**
  * Редактирование профиля пользователя
@@ -21,17 +20,17 @@ import java.util.stream.Collectors
  */
 @Controller
 @RequestMapping("/user")
-@PreAuthorize("hasAuthority('ADMIN')")
 class UserController {
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var userService: UserService
 
     /**
      * Вывод списка пользователей и всей информации по ним
      */
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     fun userList(model: Model): String {
-        model.addAttribute("users", userRepository.findAll())
+        model.addAttribute("users", userService.findAll())
         return "userList"
     }
 
@@ -40,6 +39,7 @@ class UserController {
      * @param model user смена имени пользователя
      * @param model roles смена роли пользователя
      */
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("{user}")
     fun userEdit(
             @PathVariable user: User,
@@ -53,22 +53,42 @@ class UserController {
     /**
      * Сохранение изменений профиля
      * Предворетельно очищается список ролей
+     *
+     * @param username
+     * @param form
+     * @param user
      */
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     fun userSave(
             @RequestParam username: String,
             @RequestParam form: Map<String, String>,
             @RequestParam("userId") user: User
     ): String? {
-        user.username = username
-        val roles = Arrays.stream(Role.values())
-                .map(Role::name)
-                .collect(Collectors.toSet())
-        user.roles.clear()
-        form.forEach {
-            if (roles.contains(it.key)) user.roles.add(Role.valueOf(it.key))
-        }
-        userRepository.save(user)
+        userService.saveUser(user, username, form)
         return "redirect:/user"
+    }
+
+    /**
+     * Получаем профиль авторизованного пользователя
+     *
+     * @param model
+     * @param user
+     */
+    @GetMapping("profile")
+    fun getProfile(model: Model, @AuthenticationPrincipal user: User): String {
+        model.addAttribute("username", user.username)
+        model.addAttribute("email", user.email)
+        return "profile"
+    }
+
+    @PostMapping("profile")
+    fun updateProfile(
+            @AuthenticationPrincipal user: User,
+            @RequestParam password: String,
+            @RequestParam email: String
+    ): String {
+        userService.updateProfile(user, password, email)
+        return "redirect:/user/profile"
     }
 }

@@ -32,13 +32,13 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http
                 .authorizeRequests()
-                    .antMatchers("/", "/greeting", "/registration", "/api/**", "/static/**", "/activate/*").permitAll()
-                    .anyRequest().authenticated()
+                .antMatchers("/", "/greeting", "/registration", "/api/**", "/static/**", "/active/*").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                    .formLogin()
-                    .loginPage("/login").permitAll()
+                .formLogin()
+                .loginPage("/login").permitAll()
                 .and()
-                    .logout().permitAll()
+                .logout().permitAll()
     }
 
     /**

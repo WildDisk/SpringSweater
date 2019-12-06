@@ -23,7 +23,7 @@ class Message(
       var text: String? = null,
       var tag: String? = null,
       @ManyToOne(fetch = FetchType.EAGER)
-      @JoinColumn(name = "usr_id")
+      @JoinColumn(name = "user_id")
       var author: User? = null,
       var filename: String? = null
 ) {
