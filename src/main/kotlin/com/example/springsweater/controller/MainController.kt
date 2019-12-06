@@ -42,7 +42,7 @@ class MainController {
     ): String {
         when {
             user != null -> model.addAttribute("user", user.username)
-            else -> model.addAttribute("user", "guest!")
+            else -> model.addAttribute("user", "guest")
         }
         return "greeting"
     }
