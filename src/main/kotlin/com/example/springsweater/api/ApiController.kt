@@ -62,9 +62,27 @@ class ApiController {
     @ResponseBody
     fun apiUserById(@RequestParam id: Long): User = try {
         val users = userApiRepository.findUserById(id)
-        User(users[0].id, users[0].username.toString(), users[0].password.toString(), users[0].isActive, users[0].email, users[0].activationCode, users[0].roles)
+        User(
+                users[0].id,
+                users[0].username.toString(),
+                users[0].password.toString(),
+                users[0].isActive,
+                users[0].email,
+                users[0].activationCode,
+                users[0].roles,
+                users[0].messages
+        )
     } catch (e: IndexOutOfBoundsException) {
-        User(0, "Пользователь не найден", "null", false, "null", null, mutableSetOf())
+        User(
+                0,
+                "Пользователь не найден",
+                "null",
+                false,
+                "null",
+                null,
+                mutableSetOf(),
+                mutableSetOf()
+        )
     }
 
     /**
@@ -75,9 +93,27 @@ class ApiController {
     @ResponseBody
     fun apiUserByName(@RequestParam name: String): User = try {
         val users = userApiRepository.findUserByUsername(name)
-        User(users[0].id, users[0].username.toString(), users[0].password.toString(), users[0].isActive, users[0].email, users[0].activationCode, users[0].roles)
+        User(
+                users[0].id,
+                users[0].username.toString(),
+                users[0].password.toString(),
+                users[0].isActive,
+                users[0].email,
+                users[0].activationCode,
+                users[0].roles,
+                users[0].messages
+        )
     } catch (e: IndexOutOfBoundsException) {
-        User(0, "Пользователь не найден", "null", false, "null", null, mutableSetOf())
+        User(
+                0,
+                "Пользователь не найден",
+                "null",
+                false,
+                "null",
+                null,
+                mutableSetOf(),
+                mutableSetOf()
+        )
     }
 
     /**
@@ -87,11 +123,25 @@ class ApiController {
     @RequestMapping("/api/detail-message")
     fun apiDetailMessage(@AuthenticationPrincipal user: User?): Iterable<QMessage> {
         return when (user) {
-            null -> listOf(QMessage("null", "null", "null", "Неавторизованный пользователь"))
+            null -> listOf(
+                    QMessage(
+                            "null",
+                            "null",
+                            "null",
+                            "Неавторизованный пользователь"
+                    )
+            )
             else -> {
                 val messages = messageDetailRepository.findUserMessages(user.username.toString())
                 when {
-                    messages.isEmpty() -> listOf(QMessage("null", "Сообщений не найдено", "null", "null"))
+                    messages.isEmpty() -> listOf(
+                            QMessage(
+                                    "null",
+                                    "Сообщений не найдено",
+                                    "null",
+                                    "null"
+                            )
+                    )
                     else -> messages.indices.mapTo(arrayListOf()) {
                         QMessage(
                                 messages[it].getMessageId(),

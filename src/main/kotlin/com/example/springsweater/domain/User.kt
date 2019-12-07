@@ -17,6 +17,7 @@ import javax.validation.constraints.NotBlank
  * @param email пользователя
  * @param activationCode код активации для регистрации по email
  * @param roles роли для пользователей
+ * @param messages созданные сообщения пользователя
  *
  * @project SpringSweater
  * @author WildDisk
@@ -39,8 +40,11 @@ class User(
         @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
         @CollectionTable(name = "user_role", joinColumns = [JoinColumn(name = "user_id")])
         @Enumerated(EnumType.STRING)
-        var roles: MutableSet<Role> = mutableSetOf(Role.USER)
+        var roles: MutableSet<Role> = mutableSetOf(Role.USER),
+        @OneToMany(mappedBy = "author", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        var messages: Set<Message> = setOf(Message())
 ) : UserDetails {
+
     override fun getAuthorities(): Collection<GrantedAuthority> = roles
 
     override fun isEnabled(): Boolean = isActive
@@ -64,4 +68,19 @@ class User(
     override fun isAccountNonLocked(): Boolean = true
 
     fun isAdmin(): Boolean = roles.contains(Role.ADMIN)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as User
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
 }
