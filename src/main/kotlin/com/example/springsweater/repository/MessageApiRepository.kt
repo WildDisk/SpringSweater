@@ -23,7 +23,7 @@ interface MessageApiRepository : JpaRepository<Message, Long> {
         m.tag as tag,
         u.username as username
         from message m
-        left join usr u on m.usr_id = u.id
+        left join usr u on m.user_id = u.id
         where u.username = ?1
     """, nativeQuery = true)
     fun findUserMessages(username: String): List<UsersMessage>

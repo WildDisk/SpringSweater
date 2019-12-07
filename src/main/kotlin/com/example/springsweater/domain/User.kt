@@ -3,6 +3,8 @@ package com.example.springsweater.domain
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import javax.persistence.*
+import javax.validation.constraints.Email
+import javax.validation.constraints.NotBlank
 
 /**
  * User класс отвечает за хранение данных
@@ -25,9 +27,13 @@ class User(
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long = 0,
+        @field: NotBlank(message = "Username cannot be empty")
         private var username: String = "",
+        @field: NotBlank(message = "Password cannot be empty")
         private var password: String = "",
         var isActive: Boolean = false,
+        @get: Email(message = "Email is not correct")
+        @get: NotBlank(message = "Email cannot be empty")
         var email: String = "",
         var activationCode: String? = "",
         @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
@@ -35,27 +41,27 @@ class User(
         @Enumerated(EnumType.STRING)
         var roles: MutableSet<Role> = mutableSetOf(Role.USER)
 ) : UserDetails {
-        override fun getAuthorities(): Collection<GrantedAuthority> = roles
+    override fun getAuthorities(): Collection<GrantedAuthority> = roles
 
-        override fun isEnabled(): Boolean = isActive
+    override fun isEnabled(): Boolean = isActive
 
-        override fun getUsername(): String = username
+    override fun getUsername(): String? = username
 
-        fun setUsername(username: String) {
-                this.username = username
-        }
+    fun setUsername(username: String) {
+        this.username = username
+    }
 
-        override fun isCredentialsNonExpired(): Boolean = true
+    override fun isCredentialsNonExpired(): Boolean = true
 
-        override fun getPassword(): String = password
+    override fun getPassword(): String? = password
 
-        fun setPassword(password: String) {
-                this.password = password
-        }
+    fun setPassword(password: String) {
+        this.password = password
+    }
 
-        override fun isAccountNonExpired(): Boolean = true
+    override fun isAccountNonExpired(): Boolean = true
 
-        override fun isAccountNonLocked(): Boolean = true
+    override fun isAccountNonLocked(): Boolean = true
 
-        fun isAdmin(): Boolean = roles.contains(Role.USER)
+    fun isAdmin(): Boolean = roles.contains(Role.USER)
 }

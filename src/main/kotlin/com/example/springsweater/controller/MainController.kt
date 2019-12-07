@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.IOException
 import java.util.*
+import javax.validation.Valid
 
 /**
  * Контроллер отвечающий за посты и страницу приветствия
@@ -69,8 +71,6 @@ class MainController {
     /**
      * Создание поста
      *
-     * @param text текст поста
-     * @param tag тэг поста
      * @param user автор поста
      * @param file изображение в посте
      */
@@ -78,22 +78,29 @@ class MainController {
     @PostMapping("/main")
     fun add(
             @AuthenticationPrincipal user: User,
-            @RequestParam text: String,
-            @RequestParam tag: String,
+            @Valid message: Message,
+            bindingResult: BindingResult,
             model: Model,
             @RequestParam("file") file: MultipartFile?
     ): String {
-        val message = Message(text, tag, user)
+        message.author = user
         when {
-            file != null && file.originalFilename.toString().isNotEmpty() -> {
-                val uploadDir = File(uploadPath)
-                when {
-                    !uploadDir.exists() -> uploadDir.mkdir()
+            bindingResult.hasErrors() -> {
+                val errorsMap = ControllerUtils.getErrors(bindingResult)
+                model.mergeAttributes(errorsMap)
+                model.addAttribute("message", message)
+            }
+            else -> when {
+                file != null && file.originalFilename.toString().isNotEmpty() -> {
+                    val uploadDir = File(uploadPath)
+                    when {
+                        !uploadDir.exists() -> uploadDir.mkdir()
+                    }
+                    val uuid = UUID.randomUUID().toString()
+                    val resultFileName = "$uuid.${file.originalFilename}"
+                    file.transferTo(File("$uploadPath/$resultFileName"))
+                    message.filename = resultFileName
                 }
-                val uuid = UUID.randomUUID().toString()
-                val resultFileName = "$uuid.${file.originalFilename}"
-                file.transferTo(File("$uploadPath/$resultFileName"))
-                message.filename = resultFileName
             }
         }
         messageRepository.save(message)

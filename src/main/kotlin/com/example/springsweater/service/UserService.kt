@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import java.util.*
@@ -23,9 +24,11 @@ import java.util.stream.Collectors
 @Service
 class UserService : UserDetailsService {
     @Autowired
-    lateinit var userRepository: UserRepository
+    private lateinit var userRepository: UserRepository
     @Autowired
-    lateinit var mailSender: MailSender
+    private lateinit var mailSender: MailSender
+    @Autowired
+    private lateinit var passwordEncoder: PasswordEncoder
 
     /**
      * Поиск имеющихся пользователей. Если есть,
@@ -36,7 +39,9 @@ class UserService : UserDetailsService {
      * @return UserDetails
      */
     @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(username: String?): UserDetails? = username?.let { userRepository.findByUsername(it) }
+    override fun loadUserByUsername(username: String?): UserDetails? = username?.let {
+        userRepository.findByUsername(it)
+    } ?: throw UsernameNotFoundException("User not found!")
 
     /**
      * Создание пользователя
@@ -44,13 +49,14 @@ class UserService : UserDetailsService {
      * @param user
      */
     fun addUser(user: User): Boolean {
-        val userCheck = userRepository.findByUsername(user.username)
+        val userCheck = user.username?.let { userRepository.findByUsername(it) }
         return when {
             userCheck != null -> false
             else -> {
-                user.isActive = true
+                user.isActive = false
                 user.roles = mutableSetOf(Role.USER)
                 user.activationCode = UUID.randomUUID().toString()
+                user.setPassword(passwordEncoder.encode(user.password))
                 userRepository.save(user)
                 sendMessage(user)
                 true
@@ -68,7 +74,7 @@ class UserService : UserDetailsService {
             !StringUtils.isEmpty(user.email) -> {
                 val message: String = """
                             Hello, ${user.username}
-                            Welcome to SpringSweater. Pleas, visit next link: http://localhost:8080/active/${user.activationCode}
+                            Welcome to SpringSweater. Pleas, visit next link: http://localhost:8080/activate/${user.activationCode}
                         """.trimIndent()
                 mailSender.send(user.email, "Activation code", message)
             }
@@ -83,6 +89,7 @@ class UserService : UserDetailsService {
     fun activateUser(code: String): Boolean = when (val user: User? = userRepository.findByActivationCode(code)) {
         null -> false
         else -> {
+            user.isActive = true
             user.activationCode = null
             userRepository.save(user)
             true
@@ -95,7 +102,7 @@ class UserService : UserDetailsService {
     fun findAll(): List<User> = userRepository.findAll()
 
     fun saveUser(user: User, username: String, form: Map<String, String>) {
-        user.username = username
+        user.setUsername(username)
         val roles = Arrays.stream(Role.values())
                 .map(Role::name)
                 .collect(Collectors.toSet())
@@ -121,7 +128,7 @@ class UserService : UserDetailsService {
             }
         }
         when {
-            !StringUtils.isEmpty(password) -> user.password = password
+            !StringUtils.isEmpty(password) -> user.setPassword(passwordEncoder.encode(password))
         }
         userRepository.save(user)
         when {
