@@ -4,7 +4,9 @@
     <div class="form-row">
         <div class="form-group col-md-6">
             <form method="get" action="/main" class="form-inline">
-                <input type="text" name="filter" class="form-control" value="${filter!}" placeholder="Search by tag">
+                <label>
+                    <input type="text" name="filter" class="form-control" value="${filter!}" placeholder="Search by tag">
+                </label>
                 <button type="submit" class="btn btn-primary ml-2">Search</button>
             </form>
         </div>
@@ -17,8 +19,10 @@
         <div class="form-group mt-3">
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="text" name="text" class="form-control ${(textError??)?string('is-invalid', '')}"
-                           value="<#if message??>${message.text}</#if>" placeholder="Enter your message"/>
+                    <label>
+                        <input type="text" name="text" class="form-control ${(textError??)?string('is-invalid', '')}"
+                               value="<#if message??>${message.text}</#if>" placeholder="Enter your message"/>
+                    </label>
                     <#if textError??>
                         <div class="invalid-feedback">
                             ${textError}
@@ -26,8 +30,10 @@
                     </#if>
                 </div>
                 <div class="form-group">
-                    <input type="text" name="tag" class="form-control ${(tagError??)?string('is-invalid', '')}"
-                           value="<#if message??>${message.tag}</#if>" placeholder="Tag"/>
+                    <label>
+                        <input type="text" name="tag" class="form-control ${(tagError??)?string('is-invalid', '')}"
+                               value="<#if message??>${message.tag}</#if>" placeholder="Tag"/>
+                    </label>
                     <#if tagError??>
                         <div class="invalid-feedback">
                             ${tagError}
@@ -51,7 +57,7 @@
         <#list messages as message>
             <div class="card my-3">
                 <#if message.filename??>
-                    <img src="/img/${message.filename}" class="card-img-top">
+                    <img src="/img/${message.filename}" class="card-img-top" alt="">
                 </#if>
                 <div class="m-2">
                     <span>${message.text}</span>

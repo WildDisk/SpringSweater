@@ -13,6 +13,9 @@
               href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
               integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
               crossorigin="anonymous">
+
+        <#-- Google reCAPTHA-->
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
     <body>
     <#include "navbar.ftl">
@@ -30,7 +33,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
             integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
             crossorigin="anonymous"></script>
-    </body>
     </body>
     </html>
 </#macro>

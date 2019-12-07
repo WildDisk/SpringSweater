@@ -63,5 +63,5 @@ class User(
 
     override fun isAccountNonLocked(): Boolean = true
 
-    fun isAdmin(): Boolean = roles.contains(Role.USER)
+    fun isAdmin(): Boolean = roles.contains(Role.ADMIN)
 }

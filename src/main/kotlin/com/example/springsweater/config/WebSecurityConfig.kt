@@ -33,20 +33,21 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     fun getPasswordEncoder(): PasswordEncoder = BCryptPasswordEncoder(8)
 
     /**
-     * Конфиг доступа к страницам
-     * {@link .antMatchers()} страницы к оторым есть доступ у всех
-     * {@link permitAll()} разрешает доступ всем
+     * Конфиг доступа к страницам и сохранение сессии
+     *
      * @param http
      */
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http
                 .authorizeRequests()
-                    .antMatchers("/", "/greeting", "/registration", "/api/**", "/static/**", "/activate/**").permitAll()
+                    .antMatchers("/", "/greeting", "/registration", "/api/**", "/static/**", "/activate/*").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
                     .loginPage("/login").permitAll()
+                .and()
+                    .rememberMe()
                 .and()
                     .logout().permitAll()
     }

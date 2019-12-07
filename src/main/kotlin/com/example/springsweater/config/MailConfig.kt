@@ -1,6 +1,7 @@
 package com.example.springsweater.config
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.mail.javamail.JavaMailSender
@@ -19,6 +20,7 @@ import java.util.*
  * @author WildDisk on 06.12.2019
  */
 @Configuration
+@EnableConfigurationProperties
 class MailConfig {
     @Value("\${spring.mail.host}")
     private lateinit var host: String
