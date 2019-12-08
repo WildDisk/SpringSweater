@@ -135,4 +135,14 @@ class UserService : UserDetailsService {
             isEmailChanged -> sendMessage(user)
         }
     }
+
+    fun subscribe(currentUser: User, user: User) {
+        user.subscribers.add(currentUser)
+        userRepository.save(user)
+    }
+
+    fun unsubscribe(currentUser: User, user: User) {
+        user.subscribers.remove(currentUser)
+        userRepository.save(user)
+    }
 }

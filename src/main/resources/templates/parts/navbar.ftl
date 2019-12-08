@@ -20,19 +20,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/user-messages/${currentUserId}">My messages</a>
                 </li>
-            </#if>
-            <#if isAdmin>
-                <li class="nav-item">
-                    <a class="nav-link" href="/user">User list</a>
-                </li>
-            </#if>
-            <#if user??>
+                <#if isAdmin>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user">User list</a>
+                    </li>
+                </#if>
                 <li class="nav-item">
                     <a class="nav-link" href="/user/profile">Profile</a>
                 </li>
             </#if>
         </ul>
-        <div class="navbar-text mr-3">${name}</div>
+        <div class="navbar-text mr-3"><#if user??>${name}<#else>Please, login!</#if></div>
     </div>
     <@login.logout/>
 </nav>

@@ -35,19 +35,13 @@ class MainController {
 
     /**
      * Приветствие
-     *
-     * @param user смотрим авторизован пользователь или нет
-     * @param model если пользователь авторизован возвращается имя или "guest"
      */
     @GetMapping("/")
     fun greeting(
-            @AuthenticationPrincipal user: User?,
-            model: Model
+//            @AuthenticationPrincipal currentUser: User?,
+//            model: Model
     ): String {
-        when {
-            user != null -> model.addAttribute("user", user.username)
-            else -> model.addAttribute("user", "guest")
-        }
+//        model.addAttribute("message", currentUser)
         return "greeting"
     }
 
@@ -140,6 +134,10 @@ class MainController {
             @RequestParam(required = false) message: Message?
     ): String {
         val messages = user.messages
+        model.addAttribute("userChannel", user)
+        model.addAttribute("subscriptionsCount", user.subscriptions.size)
+        model.addAttribute("subscribersCount", user.subscribers.size)
+        model.addAttribute("isSubscriber", user.subscribers.contains(currentUser))
         model.addAttribute("messages", messages)
         model.addAttribute("isCurrentUser", currentUser == user)
         model.addAttribute("message", message)

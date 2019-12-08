@@ -42,7 +42,21 @@ class User(
         @Enumerated(EnumType.STRING)
         var roles: MutableSet<Role> = mutableSetOf(Role.USER),
         @OneToMany(mappedBy = "author", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-        var messages: Set<Message> = setOf(Message())
+        var messages: Set<Message> = setOf(Message()),
+        @ManyToMany
+        @JoinTable(
+                name = "user_subscriptions",
+                joinColumns = [JoinColumn(name = "chanel_id")],
+                inverseJoinColumns = [JoinColumn(name = "subscriber_id")]
+        )
+        var subscribers: MutableSet<User> = mutableSetOf(),
+        @ManyToMany
+        @JoinTable(
+                name = "user_subscriptions",
+                joinColumns = [JoinColumn(name = "subscriber_id")],
+                inverseJoinColumns = [JoinColumn(name = "chanel_id")]
+        )
+        var subscriptions: MutableSet<User> = mutableSetOf()
 ) : UserDetails {
 
     override fun getAuthorities(): Collection<GrantedAuthority> = roles

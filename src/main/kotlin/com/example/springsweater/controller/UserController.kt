@@ -91,4 +91,37 @@ class UserController {
         userService.updateProfile(user, password, email)
         return "redirect:/user/profile"
     }
+
+    @GetMapping("subscribe/{user}")
+    fun subscribe(
+            @AuthenticationPrincipal currentUser: User,
+            @PathVariable user: User
+    ): String {
+        userService.subscribe(currentUser, user)
+        return "redirect:/user-messages/${user.id}"
+    }
+
+    @GetMapping("unsubscribe/{user}")
+    fun unsubscribe(
+            @AuthenticationPrincipal currentUser: User,
+            @PathVariable user: User
+    ): String {
+        userService.unsubscribe(currentUser, user)
+        return "redirect:/user-messages/${user.id}"
+    }
+
+    @GetMapping("{type}/{user}/list")
+    fun userList(
+            @PathVariable user: User,
+            @PathVariable type: String,
+            model: Model
+    ): String {
+        model.addAttribute("userChannel",user)
+        model.addAttribute("type",type)
+        when (type) {
+            "subscriptions" -> model.addAttribute("users", user.subscriptions)
+            else -> model.addAttribute("users", user.subscribers)
+        }
+        return "subscriptions"
+    }
 }
