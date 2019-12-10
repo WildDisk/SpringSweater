@@ -82,6 +82,13 @@ class UserController {
         return "profile"
     }
 
+    /**
+     * Изменение профился
+     *
+     * @param user смена имени пользователя
+     * @param password смена пароля пользователя
+     * @param email смена email полььзователя
+     */
     @PostMapping("profile")
     fun updateProfile(
             @AuthenticationPrincipal user: User,
@@ -92,6 +99,9 @@ class UserController {
         return "redirect:/user/profile"
     }
 
+    /**
+     * Подписка на канал
+     */
     @GetMapping("subscribe/{user}")
     fun subscribe(
             @AuthenticationPrincipal currentUser: User,
@@ -101,6 +111,9 @@ class UserController {
         return "redirect:/user-messages/${user.id}"
     }
 
+    /**
+     * Отписка от канала
+     */
     @GetMapping("unsubscribe/{user}")
     fun unsubscribe(
             @AuthenticationPrincipal currentUser: User,
@@ -110,6 +123,9 @@ class UserController {
         return "redirect:/user-messages/${user.id}"
     }
 
+    /**
+     * Список сообщений конкретного пользователя
+     */
     @GetMapping("{type}/{user}/list")
     fun userList(
             @PathVariable user: User,

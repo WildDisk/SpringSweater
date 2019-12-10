@@ -37,13 +37,7 @@ class MainController {
      * Приветствие
      */
     @GetMapping("/")
-    fun greeting(
-//            @AuthenticationPrincipal currentUser: User?,
-//            model: Model
-    ): String {
-//        model.addAttribute("message", currentUser)
-        return "greeting"
-    }
+    fun greeting(): String = "greeting"
 
     /**
      * Вывод постов на экран

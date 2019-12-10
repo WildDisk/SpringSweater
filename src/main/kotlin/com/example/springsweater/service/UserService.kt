@@ -101,6 +101,9 @@ class UserService : UserDetailsService {
      */
     fun findAll(): List<User> = userRepository.findAll()
 
+    /**
+     * Сохранение изменений профиля
+     */
     fun saveUser(user: User, username: String, form: Map<String, String>) {
         user.setUsername(username)
         val roles = Arrays.stream(Role.values())
@@ -114,7 +117,11 @@ class UserService : UserDetailsService {
     }
 
     /**
-     * Обновление профиля пользователя
+     * Изменение профился
+     *
+     * @param user смена имени пользователя
+     * @param password смена пароля пользователя
+     * @param email смена email полььзователя
      */
     fun updateProfile(user: User, password: String, email: String) {
         val userEmail = user.email
@@ -136,13 +143,19 @@ class UserService : UserDetailsService {
         }
     }
 
+    /**
+     * Подписаться на канал
+     */
     fun subscribe(currentUser: User, user: User) {
-        user.subscribers.add(currentUser)
+        user.subscribers?.add(currentUser)
         userRepository.save(user)
     }
 
+    /**
+     * Отписаться от канала
+     */
     fun unsubscribe(currentUser: User, user: User) {
-        user.subscribers.remove(currentUser)
+        user.subscribers?.remove(currentUser)
         userRepository.save(user)
     }
 }
