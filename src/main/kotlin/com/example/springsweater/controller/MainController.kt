@@ -5,6 +5,10 @@ import com.example.springsweater.domain.User
 import com.example.springsweater.repository.MessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -47,13 +51,15 @@ class MainController {
     @GetMapping("/main")
     fun main(
             @RequestParam(required = false, defaultValue = "") filter: String,
-            model: Model
+            model: Model,
+            @PageableDefault(sort = ["id"], direction = Sort.Direction.DESC) pageable: Pageable
     ): String {
-        val messages: Iterable<Message> = when {
-            filter.isEmpty() -> messageRepository.findAll()
-            else -> messageRepository.findByTag(filter)
+        val page: Page<Message> = when {
+            filter.isEmpty() -> messageRepository.findAll(pageable)
+            else -> messageRepository.findByTag(filter, pageable)
         }
-        model.addAttribute("messages", messages)
+        model.addAttribute("page", page)
+        model.addAttribute("url", "/main")
         model.addAttribute("filter", filter)
         return "main"
     }

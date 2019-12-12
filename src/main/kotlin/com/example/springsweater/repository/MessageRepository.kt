@@ -1,6 +1,8 @@
 package com.example.springsweater.repository
 
 import com.example.springsweater.domain.Message
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 
 /**
@@ -11,5 +13,6 @@ import org.springframework.data.repository.CrudRepository
  */
 interface MessageRepository : CrudRepository<Message, Long> {
     fun findMessageById(id: Long): List<Message>
-    fun findByTag(tag: String): List<Message>
+    fun findByTag(tag: String, pageable: Pageable): Page<Message>
+    fun findAll(pageable: Pageable): Page<Message>
 }
