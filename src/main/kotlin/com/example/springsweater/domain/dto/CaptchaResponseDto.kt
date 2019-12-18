@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 /**
+ * Dto для распознавания Google reCAPTCHA
  *
  * @project SpringSweater
  * @author WildDisk on 07.12.2019

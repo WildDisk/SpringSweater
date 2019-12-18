@@ -5,7 +5,6 @@ import com.example.springsweater.domain.User
 import com.example.springsweater.repository.MessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -31,7 +30,7 @@ import javax.validation.Valid
  * @author WildDisk
  */
 @Controller
-class MainController {
+class MessageController {
     @Autowired
     private lateinit var messageRepository: MessageRepository
     @Value("\${upload.path}")
@@ -50,16 +49,15 @@ class MainController {
      */
     @GetMapping("/main")
     fun main(
+            @AuthenticationPrincipal user: User,
             @RequestParam(required = false, defaultValue = "") filter: String,
-            model: Model,
-            @PageableDefault(sort = ["id"], direction = Sort.Direction.DESC) pageable: Pageable
+            model: Model
     ): String {
-        val page: Page<Message> = when {
-            filter.isEmpty() -> messageRepository.findAll(pageable)
-            else -> messageRepository.findByTag(filter, pageable)
+        val messages: Iterable<Message> = when {
+            filter.isEmpty() -> messageRepository.findAll()
+            else -> messageRepository.findByTag(filter)
         }
-        model.addAttribute("page", page)
-        model.addAttribute("url", "/main")
+        model.addAttribute("messages", messages)
         model.addAttribute("filter", filter)
         return "main"
     }
@@ -77,6 +75,7 @@ class MainController {
             @Valid message: Message,
             bindingResult: BindingResult,
             model: Model,
+            @RequestParam(required = false, defaultValue = "") filter: String,
             @RequestParam("file") file: MultipartFile?
     ): String {
         message.author = user
@@ -98,7 +97,7 @@ class MainController {
     }
 
     /**
-     * Присвоение UUID и сохранение файла
+     * Присвоение [UUID] и сохранение файла
      *
      * @param file сохраняемый файл
      * @param message
@@ -131,7 +130,8 @@ class MainController {
             @AuthenticationPrincipal currentUser: User,
             @PathVariable user: User,
             model: Model,
-            @RequestParam(required = false) message: Message?
+            @RequestParam(required = false) message: Message?,
+            @PageableDefault(sort = ["id"], direction = Sort.Direction.DESC) pageable: Pageable
     ): String {
         val messages = user.messages
         model.addAttribute("userChannel", user)

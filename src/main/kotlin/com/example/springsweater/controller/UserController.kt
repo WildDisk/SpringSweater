@@ -36,6 +36,7 @@ class UserController {
 
     /**
      * Редактирование профиля пользователя
+     *
      * @param model user смена имени пользователя
      * @param model roles смена роли пользователя
      */

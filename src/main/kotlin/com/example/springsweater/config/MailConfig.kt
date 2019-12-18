@@ -11,10 +11,10 @@ import java.util.*
 /**
  * Конфиг настройки сервиса email активации
  *
- * <host> smtp.gmail.com smtp хост
- * <username> wilddisk.spring@gmail.com почта для отправки сообщений
- * <port> 465 порт для smtp
- * <protocol> smtps
+ * [host] smtp.gmail.com smtp хост
+ * [username] wilddisk.spring@gmail.com почта для отправки сообщений
+ * [port] 465 порт для smtp
+ * [protocol] smtps
  *
  * @project SpringSweater
  * @author WildDisk on 06.12.2019

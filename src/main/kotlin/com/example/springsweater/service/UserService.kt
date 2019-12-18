@@ -36,7 +36,7 @@ class UserService : UserDetailsService {
      *
      * @throws UsernameNotFoundException
      * @param username
-     * @return UserDetails
+     * @return [UserDetails]
      */
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String?): UserDetails? = username?.let {
@@ -97,7 +97,7 @@ class UserService : UserDetailsService {
     }
 
     /**
-     * Переопределяем функцию из userRepository.findAll() для вызова
+     * Переопределяем функцию из [UserRepository.findAll] для вызова
      */
     fun findAll(): List<User> = userRepository.findAll()
 
@@ -147,7 +147,7 @@ class UserService : UserDetailsService {
      * Подписаться на канал
      */
     fun subscribe(currentUser: User, user: User) {
-        user.subscribers?.add(currentUser)
+        user.subscribers.add(currentUser)
         userRepository.save(user)
     }
 
@@ -155,7 +155,7 @@ class UserService : UserDetailsService {
      * Отписаться от канала
      */
     fun unsubscribe(currentUser: User, user: User) {
-        user.subscribers?.remove(currentUser)
+        user.subscribers.remove(currentUser)
         userRepository.save(user)
     }
 }

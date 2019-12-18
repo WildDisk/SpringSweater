@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
+/**
+ * Проверка работы аннотаций [BeforeAll] и [AfterAll]
+ */
 @SpringBootTest
 class SpringSweaterApplicationTests {
 

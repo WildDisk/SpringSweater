@@ -14,6 +14,7 @@ interface MessageApiRepository : JpaRepository<Message, Long> {
     /**
      * Выборка всех сообщений пользователя.
      * Выводит id сообщения, текст, тэг и имя автора сообщения
+     *
      * @param username имя автора сообщений
      */
     @Query(value = """

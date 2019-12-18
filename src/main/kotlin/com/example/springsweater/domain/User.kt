@@ -7,7 +7,7 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 
 /**
- * User класс отвечает за хранение данных
+ * [User] класс отвечает за хранение данных
  * в таблице usr
  *
  * @param id id пользователя
@@ -42,7 +42,7 @@ class User(
         @Enumerated(EnumType.STRING)
         var roles: MutableSet<Role> = mutableSetOf(Role.USER),
         @OneToMany(mappedBy = "author", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-        var messages: Set<Message> = setOf(Message()),
+        var messages: Set<Message>? = null,
         @ManyToMany
         @JoinTable(
                 name = "user_subscriptions",

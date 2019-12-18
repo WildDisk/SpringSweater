@@ -19,8 +19,7 @@ import java.util.*
 import javax.validation.Valid
 
 /**
- * Класс конфугурации {@link WebSecurity}. Отвечает за ограничение доступа к страницам
- * авторизацию и шифрование
+ * Контроллер для регистрации новых пользователей
  *
  * @project SpringSweater
  * @author WildDisk
@@ -113,6 +112,9 @@ class RegistrationController {
     }
 
     companion object {
+        /**
+         * url для API Google reCAPTCHA
+         */
         private const val CAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s"
     }
 }

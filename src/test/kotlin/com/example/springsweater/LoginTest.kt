@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin
@@ -18,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 
 /**
- *
+ * Интеграционные тесты на авторизацию
  *
  * @project SpringSweater
  * @author WildDisk on 09.12.2019
@@ -30,11 +31,17 @@ class LoginTest(@Autowired val mockMvc: MockMvc) {
     @Autowired
     private lateinit var createDataForTest: CreateDataForTest
 
+    /**
+     * Пересоздание пользователей в тестовой базе данных перед использованием тестов
+     */
     @BeforeAll
     fun setup() {
         createDataForTest.createUsers()
     }
 
+    /**
+     * Проверяем наличие текста на фронте
+     */
     @Test
     fun contextLoads() {
         this.mockMvc.perform(get("/"))
@@ -44,6 +51,9 @@ class LoginTest(@Autowired val mockMvc: MockMvc) {
                 .andExpect(content().string(containsString("Please, login!")))
     }
 
+    /**
+     * Проверяем редирект при отстутствии авторизации на сайте, на страницу login
+     */
     @Test
     fun accessDeniedTest() {
         this.mockMvc.perform(get("/main"))
@@ -52,6 +62,9 @@ class LoginTest(@Autowired val mockMvc: MockMvc) {
                 .andExpect(redirectedUrl("http://localhost/login"))
     }
 
+    /**
+     * Подтверждение аутентификации
+     */
     @Test
     fun correctLoginTest() {
         this.mockMvc.perform(formLogin().user("admin").password("admin"))
@@ -59,6 +72,9 @@ class LoginTest(@Autowired val mockMvc: MockMvc) {
                 .andExpect(redirectedUrl("/"))
     }
 
+    /**
+     * Ошибка аутентификации при отсутствии пользователя
+     */
     @Test
     fun badCredentials() {
         this.mockMvc.perform(post("/login").param("username", "John"))
@@ -66,6 +82,9 @@ class LoginTest(@Autowired val mockMvc: MockMvc) {
                 .andExpect(status().isForbidden)
     }
 
+    /**
+     * Удаление пользователей из тестовой базы данных после использования тестов
+     */
     @AfterAll
     fun teardown() {
         createDataForTest.deleteUsers()

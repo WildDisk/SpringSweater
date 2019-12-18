@@ -27,7 +27,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     private lateinit var passwordEncoder: PasswordEncoder
 
     /**
-     * Bean {@link PasswordEncoder} для шифрования паролей с силой 8
+     * Bean [PasswordEncoder] для шифрования паролей с силой 8
      */
     @Bean
     fun getPasswordEncoder(): PasswordEncoder = BCryptPasswordEncoder(8)
@@ -53,9 +53,10 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     /**
-     * Конфиг аутентификации
-     * userService передаёт пользователя в {@link UserDetailService}
+     * Конфиг аутентификации userService передаёт пользователя в
+     * [org.springframework.security.core.userdetails.UserDetailsService]
      * для его аутентификации
+     *
      * @param auth
      */
     @Throws(Exception::class)

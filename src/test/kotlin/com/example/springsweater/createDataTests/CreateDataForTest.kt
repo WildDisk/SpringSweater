@@ -5,7 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 
 /**
- *
+ * Создание а так же удаление пользователей и сообщений в тестовой базе данных
+ * для интеграционных тестов
  *
  * @project SpringSweater
  * @author WildDisk on 09.12.2019
@@ -15,6 +16,9 @@ class CreateDataForTest {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
+    /**
+     * Пересоздание пользователей и их ролей
+     */
     fun createUsers() {
         println(">> Deleting users and recreate")
         jdbcTemplate.execute("""
@@ -32,6 +36,9 @@ class CreateDataForTest {
 
     }
 
+    /**
+     * Удаление пользователей и их ролей
+     */
     fun deleteUsers() {
         println(">> Deleting users")
         jdbcTemplate.execute("""
@@ -41,6 +48,9 @@ class CreateDataForTest {
 
     }
 
+    /**
+     * Пересоздание сообщений пользователей
+     */
     fun createMessages() {
         println(">> Deleting messages and recreate")
         jdbcTemplate.execute("""
@@ -56,6 +66,9 @@ class CreateDataForTest {
         """.trimIndent())
     }
 
+    /**
+     * Удаление сообщений пользователей
+     */
     fun deleteMessages() {
         println(">> Deleting messages")
         jdbcTemplate.execute("""

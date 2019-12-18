@@ -1,6 +1,6 @@
 package com.example.springsweater
 
-import com.example.springsweater.controller.MainController
+import com.example.springsweater.controller.MessageController
 import com.example.springsweater.createDataTests.CreateDataForTest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath
 
 /**
- *
+ * Интеграционные тесты на создание новых постов
  *
  * @project SpringSweater
  * @author WildDisk on 09.12.2019
@@ -28,20 +28,26 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
 @WithUserDetails(value = "John")
-class MainControllerTest {
+class MessageControllerTest {
     @Autowired
-    private lateinit var controller: MainController
+    private lateinit var controller: MessageController
     @Autowired
     private lateinit var mockMvc: MockMvc
     @Autowired
     private lateinit var createDataForTests: CreateDataForTest
 
+    /**
+     * Пересоздание пользователей и сообщений в тестовой базе данных перед использованием тестов
+     */
     @BeforeAll
     fun setup() {
         createDataForTests.createUsers()
         createDataForTests.createMessages()
     }
 
+    /**
+     * Отображение имени пользователя на странице при аутентификации
+     */
     @Test
     fun mainPageTest() {
         this.mockMvc.perform(get("/main"))
@@ -50,6 +56,9 @@ class MainControllerTest {
                 .andExpect(xpath("//*[@id='navbarSupportedContent']/div").string("John"))
     }
 
+    /**
+     * Количество сообщений на странице
+     */
     @Test
     fun messageListTest() {
         this.mockMvc.perform(get("/main"))
@@ -58,6 +67,9 @@ class MainControllerTest {
                 .andExpect(xpath("//*[@id='message-list']/div").nodeCount(5))
     }
 
+    /**
+     * Тестирование фильтрации сообщений по тегу
+     */
     @Test
     fun filterMessageTest() {
         this.mockMvc.perform(get("/main").param("filter", "first tag"))
@@ -67,6 +79,9 @@ class MainControllerTest {
                 .andExpect(xpath("//*[@id='message-list']/div[@data-id='1']").exists())
     }
 
+    /**
+     * Тестирование создания нового поста на сайте
+     */
     @Test
     fun addMessageToListTest() {
         val multipart = multipart("/main")
@@ -83,6 +98,9 @@ class MainControllerTest {
                 .andExpect(xpath("//*[@id='message-list']/div[@data-id='10']/div/i").string("#new one"));
     }
 
+    /**
+     * Удаление сообщений и пользователей из тестовой базы данных после использования тестов
+     */
     @AfterAll
     fun teardown() {
         createDataForTests.deleteMessages()

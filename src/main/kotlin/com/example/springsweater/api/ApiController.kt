@@ -70,7 +70,9 @@ class ApiController {
                 users[0].email,
                 users[0].activationCode,
                 users[0].roles,
-                users[0].messages
+                users[0].messages,
+                users[0].subscribers,
+                users[0].subscriptions
         )
     } catch (e: IndexOutOfBoundsException) {
         User(
@@ -80,6 +82,8 @@ class ApiController {
                 false,
                 "null",
                 null,
+                mutableSetOf(),
+                mutableSetOf(),
                 mutableSetOf(),
                 mutableSetOf()
         )
@@ -101,7 +105,9 @@ class ApiController {
                 users[0].email,
                 users[0].activationCode,
                 users[0].roles,
-                users[0].messages
+                users[0].messages,
+                users[0].subscribers,
+                users[0].subscriptions
         )
     } catch (e: IndexOutOfBoundsException) {
         User(
@@ -111,6 +117,8 @@ class ApiController {
                 false,
                 "null",
                 null,
+                mutableSetOf(),
+                mutableSetOf(),
                 mutableSetOf(),
                 mutableSetOf()
         )

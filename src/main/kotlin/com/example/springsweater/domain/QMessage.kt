@@ -1,8 +1,8 @@
 package com.example.springsweater.domain
 
 /**
- * Обёртка над {@link Message} в ApiController для передачи
- * данных в JSON через {@link MessageApiRepository} NativeQuery
+ * Обёртка над [Message] в [com.example.springsweater.api.ApiController] для передачи
+ * данных в JSON через [com.example.springsweater.repository.MessageApiRepository] NativeQuery
  *
  * @project SpringSweater
  * @author WIldDisk

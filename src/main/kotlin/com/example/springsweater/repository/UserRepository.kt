@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface UserRepository : JpaRepository<User, Long> {
     /**
      * Поиск пользователя по имени
+     *
      * @param username искомого пользователя
      * @return User? Если без ? падает при передачи параметров из шаблона
      */
