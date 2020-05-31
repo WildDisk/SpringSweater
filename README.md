@@ -5,11 +5,15 @@ Just a clone Twitter, like home project, for Spring Boot learning on Kotlin
 Before started job needed create worker db, extension "pgcrypto" for this db and superuser role.
 
 ### Create database and superuser
+```sql
 CREATE DATABASE springsweater;
 CREATE USER springroot WITH password '1Qazxcvb';
 GRANT ALL ON DATABASE springsweater TO springroot;
 ALTER ROLE springroot SUPERUSER;
+```
 
 ### Create extension
 Connecting to worker database
+```sql
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
+```
